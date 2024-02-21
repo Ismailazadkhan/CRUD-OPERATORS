@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Crud Operations</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body class="container">
+  <h1>Crud Operations</h1>
+  <form id="addProductForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" required="">
+    <br>
+    <label for="brand">Brand:</label>
+    <input type="text" id="brand" required="">
+    <br>
+    <label for="model">Model:</label>
+    <input type="text" id="model" required="">
+    <br>
+    <label for="price">Price:</label>
+    <input type="number" id="price" required="">
+    <br>
+    <label for="description">description:</label>
+    <input type="text" id="description" required="" maxlength="200">
+    <br>
+    <button class="icon-button add-button" type="submit">
+      <i class="fas fa-plus-circle"></i>
+      Add Product
+    </button>
+  </form>
+  <div id="products">
+
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <script type="module">
+
+    document.querySelector("#addProductForm")
+      .addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const name = document.querySelector('#name').value;
+        const brand = document.querySelector('#brand').value;
+        const model = document.querySelector('#model').value;
+        const price = document.querySelector('#price').value;
+        const description = document.querySelector('#description').value;
+
+        try {
+          const resp = await axios.post(`http://localhost:3000/product`, {
+            name: name,
+            brand,
+            model,
+            price,
+            description
+          });
+          console.log("resp: ", resp.data);
+          getAllProducts();
+
+        } catch (e) {
+          console.error("Error getting products");
+        }
+
+      })
+
+
+    const getAllProducts = async () => {
+      try {
+
+        const resp = await axios.get("http://localhost:3000/products");
+        console.log("resp: ", resp.data.data);
+
+        let productsDiv = document.querySelector("#products")
+        productsDiv.innerHTML = "";
+
+        resp.data.data.map(eachProduct => {
+          productsDiv.innerHTML += `<div id="box_${eachProduct._id}" class="card">
+                        
+                        <h2>Name: ${eachProduct.name}</h2>
+                        <p>brand: ${eachProduct.brand}</p>
+                        <p>model: ${eachProduct.model}</p>
+                        <p>Price: ${eachProduct.price} $ Only</p>
+                        <p>id: ${eachProduct._id}</p>
+                        <p>Description: ${eachProduct.description}</p>
+                        
+                        <button onclick="deleteProduct('${eachProduct._id}')" 
+                        class="icon-button delete-button"type="button">
+                        <i class="fas fa-trash"></i> Delete Product</button>
+                        
+                        <button onclick='editProduct(${JSON.stringify(eachProduct)})'
+                        class="icon-button edit-button"type="button">
+                        <i class="fas fa-pencil-alt"></i> Edit Product</button>
+                      </div>`
+        })
+
+
+      } catch (e) {
+        console.error("Error getting products");
+      }
+    };
+
+    window.addEventListener("load", getAllProducts);
+
+
+    window.editProduct = async (product) => {
+
+      console.log("product: ", product);
+
+      let box = document.querySelector(`#box_${product._id}`);
+      box.innerHTML = '';
+
+      box.innerHTML = `<form onsubmit="updateProduct(event, '${product._id}')">
+      Name: <input required type="text" id="name_${product._id}" value='${product.name}'>
+        <br>
+        Brand: <input required type="text" id="brand_${product._id}" value='${product.brand}'>
+        <br>
+        Model: <input required type="text" id="model_${product._id}" value='${product.model}'>
+        <br>
+        Price: <input required type="number" id="price_${product._id}" value='${product.price}'>
+        <br>
+        Description: <input required maxlength="200" type="text" id="description_${product._id}" value='${product.description}'>
+        <br>
+        <button class="icon-button update-button" type="submit">
+      <i class="fas fa-check-circle"></i>
+      Update Product
+    </button>
+    </form>`
+    }
+
+    window.updateProduct = async (event, id) => {
+      event.preventDefault();
+      console.log("id: ", id);
+
+      const name = document.querySelector(`#name_${id}`).value;
+      const price = document.querySelector(`#price_${id}`).value;
+      const description = document.querySelector(`#description_${id}`).value;
+
+      try {
+        const resp = await axios.put(`http://localhost:3000/product/${id}`, {
+          name, price, description
+        });
+        console.log("resp: ", resp.data);
+        getAllProducts();
+
+      } catch (e) {
+        console.error("Error getting products");
+      }
+    }
+
+    window.deleteProduct = async (id) => {
+      try {
+        console.log("id: ", id);
+        const resp = await axios.delete(`http://localhost:3000/product/${id}`);
+        console.log("resp: ", resp.data);
+        getAllProducts();
+
+      } catch (e) {
+        console.error("Error getting products");
+      }
+    }
+  </script>
+  <script src="server.mjs"></script>
+</body>
+
+</html>
