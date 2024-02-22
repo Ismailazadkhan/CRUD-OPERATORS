@@ -18,14 +18,14 @@
     <label for="brand">Brand:</label>
     <input type="text" id="brand" required="">
     <br>
-    <label for="model">Model:</label>
-    <input type="text" id="model" required="">
+    <label for="supplier">Supplier:</label>
+    <input type="text" id="supplier" required="">
     <br>
     <label for="price">Price:</label>
     <input type="number" id="price" required="">
     <br>
-    <label for="description">description:</label>
-    <input type="text" id="description" required="" maxlength="200">
+    <label for="quantity">Quantity:</label>
+    <input type="text" id="quantity" required="" maxlength="200">
     <br>
     <button class="icon-button add-button" type="submit">
       <i class="fas fa-plus-circle"></i>
@@ -45,19 +45,19 @@
       .addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        const name = document.querySelector('#name').value;
+        const rm code = document.querySelector('#rm code').value;
         const brand = document.querySelector('#brand').value;
-        const model = document.querySelector('#model').value;
+        const supplier = document.querySelector('#supplier').value;
         const price = document.querySelector('#price').value;
-        const description = document.querySelector('#description').value;
+        const quantity = document.querySelector('#quantity').value;
 
         try {
           const resp = await axios.post(`http://localhost:3000/product`, {
-            name: name,
+            rm code: rm code,
             brand,
-            model,
+            supplier,
             price,
-            description
+            quantity
           });
           console.log("resp: ", resp.data);
           getAllProducts();
@@ -81,12 +81,12 @@
         resp.data.data.map(eachProduct => {
           productsDiv.innerHTML += `<div id="box_${eachProduct._id}" class="card">
                         
-                        <h2>Name: ${eachProduct.name}</h2>
+                        <h2>Rm Code: ${eachProduct.rm code}</h2>
                         <p>brand: ${eachProduct.brand}</p>
-                        <p>model: ${eachProduct.model}</p>
+                        <p>supplier: ${eachProduct.supplier}</p>
                         <p>Price: ${eachProduct.price} $ Only</p>
                         <p>id: ${eachProduct._id}</p>
-                        <p>Description: ${eachProduct.description}</p>
+                        <p>Quantity: ${eachProduct.quantity}</p>
                         
                         <button onclick="deleteProduct('${eachProduct._id}')" 
                         class="icon-button delete-button"type="button">
@@ -115,15 +115,15 @@
       box.innerHTML = '';
 
       box.innerHTML = `<form onsubmit="updateProduct(event, '${product._id}')">
-      Name: <input required type="text" id="name_${product._id}" value='${product.name}'>
+      Rm Code: <input required type="text" id="rm code_${product._id}" value='${product.rm code}'>
         <br>
         Brand: <input required type="text" id="brand_${product._id}" value='${product.brand}'>
         <br>
-        Model: <input required type="text" id="model_${product._id}" value='${product.model}'>
+        Supplier: <input required type="text" id="supplier_${product._id}" value='${product.supplier}'>
         <br>
         Price: <input required type="number" id="price_${product._id}" value='${product.price}'>
         <br>
-        Description: <input required maxlength="200" type="text" id="description_${product._id}" value='${product.description}'>
+        Quantity: <input required maxlength="200" type="text" id="quantity_${product._id}" value='${product.quantity}'>
         <br>
         <button class="icon-button update-button" type="submit">
       <i class="fas fa-check-circle"></i>
@@ -136,9 +136,9 @@
       event.preventDefault();
       console.log("id: ", id);
 
-      const name = document.querySelector(`#name_${id}`).value;
+      const rm code = document.querySelector(`#rm code_${id}`).value;
       const price = document.querySelector(`#price_${id}`).value;
-      const description = document.querySelector(`#description_${id}`).value;
+      const quantity = document.querySelector(`#quantity_${id}`).value;
 
       try {
         const resp = await axios.put(`http://localhost:3000/product/${id}`, {
