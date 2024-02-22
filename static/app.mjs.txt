@@ -2,28 +2,28 @@ document.querySelector("#ProductForm")
     .addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        const name = document.querySelector('#name').value;
+        const rm code = document.querySelector('#rm code').value;
         const brand = document.querySelector('#brand').value;
-        const model = document.querySelector('#model').value;
+        const supplier = document.querySelector('#supplier').value;
         const price = document.querySelector('#price').value;
-        const description = document.querySelector('#description').value;
+        const quantity = document.querySelector('#quantity').value;
 
         try {
             const resp = await axios.post(`http://localhost:3000/product`, {
-                name: name,
+                rm code: rm code,
                 brand,
-                model,
+                supplier,
                 price,
-                description
+                quantity
             });
             console.log("resp: ", resp.data);
             getAllProducts();
 
-            document.querySelector('#name').value = '';
+            document.querySelector('#rm code').value = '';
             document.querySelector('#brand').value = '';
-            document.querySelector('#model').value = '';
+            document.querySelector('#supplier').value = '';
             document.querySelector('#price').value = '';
-            document.querySelector('#description').value = '';
+            document.querySelector('#quantity').value = '';
 
         } catch (e) {
             console.error("Error getting products");
@@ -44,11 +44,12 @@ const getAllProducts = async () => {
         resp.data.data.map(eachProduct => {
             productsDiv.innerHTML += `<div class="card">
                     <h2>Name: ${eachProduct.name}</h2>
+                    <p><strong>Rm Code:</strong> ${eachProduct.rm code}</p>
                     <p><strong>Brand:</strong> ${eachProduct.brand}</p>
-                    <p><strong>Model:</strong> ${eachProduct.model}</p>
+                    <p><strong>Supplier:</strong> ${eachProduct.supplier}</p>
                     <p><strong>Price:</strong> ${eachProduct.price} $</p>
                     <p><strong>Pro.id:</strong> ${eachProduct._id}</p>
-                    <p><strong>Description:</strong> ${eachProduct.description}</p>
+                    <p><strong>Quantity:</strong> ${eachProduct.quantity}</p>
                     <br>
                     <button class="icon-button delete-button"type="button"
                     onclick="deleteProduct('${eachProduct._id}') ">
@@ -81,16 +82,16 @@ window.editProduct = async (product) => {
 
     box.innerHTML = `<form onsubmit="updateProduct(event, '${product._id}')">
     
-        Name: <input required type="text" id="name_${product._id}" value='${product.name}'>
+        Rm code: <input required type="text" id="rm code_${product._id}" value='${product.rm code}'>
         <br>
         Brand: <input required type="text" id="brand_${product._id}" value='${product.brand}'>
         <br>
-        Model: <input required type="text" id="model_${product._id}" value='${product.model}'>
+        Supplier: <input required type="text" id="supplier_${product._id}" value='${product.supplier}'>
         <br>
         Price: <input required type="number" id="price_${product._id}" value='${product.price}'>
         <br>
-        Description: <input required maxlength="200" type="text" id="description_${product._id}" 
-        value='${product.description}'>
+        Quantity: <input required maxlength="200" type="text" id="quantity_${product._id}" 
+        value='${product.quantity}'>
         <br>
             <button class="update-button" type="submit">
                 <i class="fas fa-check"></i> Update
@@ -105,15 +106,15 @@ window.updateProduct = async (event, id) => {
     event.preventDefault();
     console.log("id: ", id);
 
-    const name = document.querySelector(`#name_${id}`).value;
+    const rm code = document.querySelector(`#rm code_${id}`).value;
     const brand = document.querySelector(`#brand_${id}`).value;
-    const model = document.querySelector(`#model_${id}`).value;
+    const supplier = document.querySelector(`#supplier_${id}`).value;
     const price = document.querySelector(`#price_${id}`).value;
-    const description = document.querySelector(`#description_${id}`).value;
+    const quantity = document.querySelector(`#quantity_${id}`).value;
 
     try {
         const resp = await axios.put(`http://localhost:3000/product/${id}`, {
-            name, brand, model, price, description
+            rm code, brand, supplier, price, quantity
         });
         console.log("resp: ", resp.data);
         getAllProducts();
