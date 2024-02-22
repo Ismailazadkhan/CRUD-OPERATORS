@@ -85,11 +85,11 @@ app.get("/product/:id", async (req, res) => {
 
 app.post("/product", async (req, res) => {
 
-  if (!req?.body?.name
+  if (!req?.body?.rm code
     || !req?.body?.brand
-    || !req?.body?.model
+    || !req?.body?.supplier
     || !req?.body?.price
-    || !req?.body?.description) {
+    || !req?.body?.quantity) {
 
     res.status(403).send(`
       required parameter missing. example JSON request body:
@@ -104,11 +104,11 @@ app.post("/product", async (req, res) => {
 
   try {
     const doc = {
-      name: req?.body?.name,
+      rm code: req?.body?.rm code,
       brand: req?.body?.brand,
-      model: req?.body?.model,
+      supplier: req?.body?.supplier,
       price: req?.body?.price,
-      description: req?.body?.description,
+      quantity: req?.body?.quantity,
     }
 
     const result = await productsCollection.insertOne(doc);
@@ -129,33 +129,33 @@ app.put("/product/:id", async (req, res) => {
   }
 
   if (
-    !req.body.name
+    !req.body.rm code
     && !req?.body?.brand
-    && !req?.body?.model
+    && !req?.body?.supplier
     && !req.body.price
-    && !req.body.description) {
+    && !req.body.quantity) {
 
     res.status(403).send(`
       required parameter missing. 
-      atleast one parameter is required: name, brand, model, price or description to complete update
+      atleast one parameter is required: rm code, brand, supplier, price or quantity to complete update
       example JSON request body:
       {
-        name: "abc product",
+        rm code: "100001",
         brand: "abc",
-        model: "xyz",
+        supplier: "xyz",
         price: "$23.12",
-        description: "abc product description"
+        quantity: "123 product quantity"
     }`);
     return;
   }
 
   let product = {}
 
-  if (req.body.name) product.name = req.body.name;
+  if (req.body.rm code) product.rm code = req.body.rm code;
   if (req.body.brand) product.brand = req.body.brand;
-  if (req.body.model) product.model = req.body.model;
+  if (req.body.supplier) product.supplier = req.body.supplier;
   if (req.body.price) product.price = req.body.price;
-  if (req.body.description) product.description = req.body.description;
+  if (req.body.quantity) product.quantity = req.body.quantity;
 
   try {
     const productData = await productsCollection
